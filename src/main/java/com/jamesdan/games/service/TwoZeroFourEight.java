@@ -26,7 +26,7 @@ public class TwoZeroFourEight {
         }
 
         Random random = new Random();
-        int cellsToFill = 1 + random.nextInt(2); // 1 to 2
+        int cellsToFill = random.nextInt(2); // 0 to 2
 
         for (int k = 0; k < cellsToFill && !emptyCells.isEmpty(); k++) {
             int idx = random.nextInt(emptyCells.size());
@@ -35,14 +35,13 @@ public class TwoZeroFourEight {
         }
 
         printBoard();
-        if(emptyCells.isEmpty()) {
+        if (emptyCells.isEmpty()) {
             System.out.println("GAME OVER! No more empty cells to fill.");
             return true; // Game over
         }
 
         return false; // Game continues
     }
-
 
 
     private void printBoard() {
@@ -62,7 +61,6 @@ public class TwoZeroFourEight {
         System.out.println("Starting the 2048 game...");
         // Additional game setup code would go here
         randomize();
-        printBoard();
 
         System.out.println("Use 'w' (up), 'a' (left), 's' (down), 'd' (right). Type 'q' to quit.");
         try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8))) {
@@ -71,7 +69,9 @@ public class TwoZeroFourEight {
                 if (line.isEmpty()) continue;
                 char ch = Character.toLowerCase(line.charAt(0));
                 switch (ch) {
-                    case 'w' -> { if (moveUp()) return; }
+                    case 'w' -> {
+                        if (moveUp()) return;
+                    }
                     case 'a' -> moveLeft();
                     case 's' -> moveDown();
                     case 'd' -> moveRight();
@@ -86,30 +86,87 @@ public class TwoZeroFourEight {
     }
 
     private boolean moveUp() {
-        // Logic to move tiles up
         System.out.println("Moving tiles up...");
-        // Implement the logic for moving tiles up
+        for (int x = 0; x < 4; x++) {
+            for (int y = 1; y < 4; y++) {
+                if (board[y][x] != 0) {
+                    int targetY = y;
+                    while (targetY > 0 && board[targetY - 1][x] == 0) {
+                        board[targetY - 1][x] = board[targetY][x];
+                        board[targetY][x] = 0;
+                        targetY--;
+                    }
+                    if (targetY > 0 && board[targetY - 1][x] == board[targetY][x]) {
+                        board[targetY - 1][x] *= 2;
+                        board[targetY][x] = 0;
+                    }
+                }
+            }
+        }
+
         return randomize();
     }
 
     private void moveDown() {
-        // Logic to move tiles down
         System.out.println("Moving tiles down...");
-        // Implement the logic for moving tiles down
-        printBoard();
+        for (int x = 0; x < 4; x++) {
+            for (int y = 2; y >= 0; y--) {
+                if (board[y][x] != 0) {
+                    int targetY = y;
+                    while (targetY < 3 && board[targetY + 1][x] == 0) {
+                        board[targetY + 1][x] = board[targetY][x];
+                        board[targetY][x] = 0;
+                        targetY++;
+                    }
+                    if (targetY < 3 && board[targetY + 1][x] == board[targetY][x]) {
+                        board[targetY + 1][x] *= 2;
+                        board[targetY][x] = 0;
+                    }
+                }
+            }
+        }
+        randomize();
     }
 
     private void moveLeft() {
-        // Logic to move tiles left
         System.out.println("Moving tiles left...");
-        // Implement the logic for moving tiles left
-        printBoard();
+        for (int y = 0; y < 4; y++) {
+            for (int x = 1; x < 4; x++) {
+                if (board[y][x] != 0) {
+                    int targetX = x;
+                    while (targetX > 0 && board[y][targetX - 1] == 0) {
+                        board[y][targetX - 1] = board[y][targetX];
+                        board[y][targetX] = 0;
+                        targetX--;
+                    }
+                    if (targetX > 0 && board[y][targetX - 1] == board[y][targetX]) {
+                        board[y][targetX - 1] *= 2;
+                        board[y][targetX] = 0;
+                    }
+                }
+            }
+        }
+        randomize();
     }
 
     private void moveRight() {
-        // Logic to move tiles right
         System.out.println("Moving tiles right...");
-        // Implement the logic for moving tiles right
-        printBoard();
+        for (int y = 0; y < 4; y++) {
+            for (int x = 2; x >= 0; x--) {
+                if (board[y][x] != 0) {
+                    int targetX = x;
+                    while (targetX < 3 && board[y][targetX + 1] == 0) {
+                        board[y][targetX + 1] = board[y][targetX];
+                        board[y][targetX] = 0;
+                        targetX++;
+                    }
+                    if (targetX < 3 && board[y][targetX + 1] == board[y][targetX]) {
+                        board[y][targetX + 1] *= 2;
+                        board[y][targetX] = 0;
+                    }
+                }
+            }
+        }
+        randomize();
     }
 }
